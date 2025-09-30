@@ -1,0 +1,66 @@
+[gd_scene load_steps=10 format=3 uid="uid://drx8gkc8yay1y"]
+
+[ext_resource type="Texture2D" uid="uid://cyi3enu2hxufl" path="res://art/enemyFlyingAlt_1.png" id="1_dejt1"]
+[ext_resource type="Script" uid="uid://ccjv3dps6t0qu" path="res://Mob.cs" id="1_g4t6j"]
+[ext_resource type="Texture2D" uid="uid://xt8svgux4ghl" path="res://art/enemyFlyingAlt_2.png" id="2_g4t6j"]
+[ext_resource type="Texture2D" uid="uid://bt2os3prewo3k" path="res://art/enemySwimming_1.png" id="3_rgts5"]
+[ext_resource type="Texture2D" uid="uid://ykrc25memsga" path="res://art/enemySwimming_2.png" id="4_icb63"]
+[ext_resource type="Texture2D" uid="uid://ck4qenyei5mdr" path="res://art/enemyWalking_1.png" id="5_qq5vu"]
+[ext_resource type="Texture2D" uid="uid://2txtnhchq1rh" path="res://art/enemyWalking_2.png" id="6_m7fbl"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sa8te"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_dejt1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_g4t6j")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_rgts5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_icb63")
+}],
+"loop": true,
+"name": &"swim",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_qq5vu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_m7fbl")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dejt1"]
+radius = 36.0
+height = 102.0
+
+[node name="Mob" type="RigidBody2D"]
+collision_mask = 0
+gravity_scale = 0.0
+script = ExtResource("1_g4t6j")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.75, 0.75)
+sprite_frames = SubResource("SpriteFrames_sa8te")
+animation = &"walk"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_dejt1")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
