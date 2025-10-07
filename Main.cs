@@ -51,7 +51,7 @@ public partial class Main : Node
         GetNode<Timer>("StartTimer").Start();
 
         //Start musikken
-        GetNode<AudioStreamPlayer>("Music").Play();
+        GetNode<AudioStreamPlayer2D>("Music").Play();
     }
 
     private void GameOver()
@@ -64,8 +64,8 @@ public partial class Main : Node
         GetNode<Timer>("ScoreTimer").Stop();
 
         // Stop musikken
-        GetNode<AudioStreamPlayer>("Music").Stop();
-        GetNode<AudioStreamPlayer>("DeathSound").Play();
+        GetNode<AudioStreamPlayer2D>("Music").Stop();
+        GetNode<AudioStreamPlayer2D>("DeathSound").Play();
     }
 
     private void OnStartTimerTimeout()
