@@ -49,6 +49,9 @@ public partial class Main : Node
 
         // Start nedtælling før mobs spawner
         GetNode<Timer>("StartTimer").Start();
+
+        //Start musikken
+        GetNode<AudioStreamPlayer>("Music").Play();
     }
 
     private void GameOver()
@@ -59,6 +62,10 @@ public partial class Main : Node
         // Stop mob og score timers
         GetNode<Timer>("MobTimer").Stop();
         GetNode<Timer>("ScoreTimer").Stop();
+
+        // Stop musikken
+        GetNode<AudioStreamPlayer>("Music").Stop();
+        GetNode<AudioStreamPlayer>("DeathSound").Play();
     }
 
     private void OnStartTimerTimeout()
