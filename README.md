@@ -1,6 +1,5 @@
-==============================
-   DODGE THE CREEPS - README
-==============================
+# DODGE THE CREEPS - README
+
 
 Installation:
 ------------------------------
