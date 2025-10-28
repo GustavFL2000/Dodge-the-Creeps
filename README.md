@@ -24,6 +24,10 @@ Tips:
 - Du kan også tjekke, at du har de nyeste .NET runtime-filer
   installeret (kræves kun i visse Windows-versioner).
 
+W.I.P:
+------------------------------
+- Ny opdatering (Tilføjet coins, man kan samle, mangler at bliver udgivet som release til min hjemmeside)
+
 Kontakt:
 ------------------------------
 Udviklet af: Gustav Færmann Lassen (Som følge af Godot's egen 2D tortorial)
