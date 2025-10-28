@@ -6,7 +6,11 @@ public partial class Main : Node
     [Export]
     public PackedScene MobScene { get; set; } // Reference til mob scenen (drag i editor)
 
+    [Export]
+    public PackedScene CoinScene { get; set; }
+
     private int _score;
+    private int _coins;
     private Hud _hud;
     private Player _player;
 
@@ -24,6 +28,7 @@ public partial class Main : Node
         GetNode<Timer>("MobTimer").Timeout += OnMobTimerTimeout;
         GetNode<Timer>("ScoreTimer").Timeout += OnScoreTimerTimeout;
         GetNode<Timer>("StartTimer").Timeout += OnStartTimerTimeout;
+        GetNode<Timer>("CoinTimer").Timeout += OnCoinTimerTimeout;
 
         // Start et nyt spil automatisk (hvis du vil teste uden startknap)
         // NewGame(); <----
@@ -34,10 +39,12 @@ public partial class Main : Node
     public void NewGame()
     {
         _score = 0;
+        _coins = 0;
 
         // Note that for calling Godot-provided methods with strings,
         // we have to use the original Godot snake_case name.
         GetTree().CallGroup("mobs", Node.MethodName.QueueFree);
+        GetTree().CallGroup("coins", Node.MethodName.QueueFree);
 
         // Flyt player til startposition
         var startPosition = GetNode<Marker2D>("StartPosition");
@@ -45,6 +52,7 @@ public partial class Main : Node
 
         // Reset HUD
         _hud.UpdateScore(_score);
+        _hud.UpdateCoins(_coins);
         _hud.ShowMessage("Get Ready!");
 
         // Start nedtælling før mobs spawner
@@ -62,6 +70,9 @@ public partial class Main : Node
         // Stop mob og score timers
         GetNode<Timer>("MobTimer").Stop();
         GetNode<Timer>("ScoreTimer").Stop();
+        GetNode<Timer>("CoinTimer").Stop();
+
+        GetTree().CallGroup("coins", Node.MethodName.QueueFree);
 
         // Stop musikken
         GetNode<AudioStreamPlayer2D>("Music").Stop();
@@ -73,6 +84,7 @@ public partial class Main : Node
         // Når start-timeren går → aktiver mobs og scoring
         GetNode<Timer>("MobTimer").Start();
         GetNode<Timer>("ScoreTimer").Start();
+        GetNode<Timer>("CoinTimer").Start();
     }
 
     private void OnScoreTimerTimeout()
@@ -105,5 +117,62 @@ public partial class Main : Node
 
         // Tilføj mob til scenen
         AddChild(mob);
+    }
+
+        private const float MIN_COIN_DISTANCE = 5.0f; // Assuming coin radius is around 10, so diameter is 20
+    
+        private void OnCoinTimerTimeout()
+        {
+            // Instantiér en ny coin fra PackedScene
+            Coin coin = CoinScene.Instantiate<Coin>();
+    
+            Vector2 spawnPosition = Vector2.Zero;
+            bool foundSafePosition = false;
+            int attempts = 0;
+            const int MAX_ATTEMPTS = 50; // Limit attempts to prevent infinite loop
+    
+            while (!foundSafePosition && attempts < MAX_ATTEMPTS)
+            {
+                spawnPosition = new Vector2(
+                    (float)GD.RandRange(0, GetViewport().GetVisibleRect().Size.X),
+                    (float)GD.RandRange(80.0, GetViewport().GetVisibleRect().Size.Y)
+                );
+    
+                foundSafePosition = true; // Assume safe until proven otherwise
+    
+                // Check against existing coins
+                foreach (Node node in GetTree().GetNodesInGroup("coins"))
+                {
+                    if (node is Coin existingCoin)
+                    {
+                        if (spawnPosition.DistanceTo(existingCoin.Position) < MIN_COIN_DISTANCE)
+                        {
+                            foundSafePosition = false;
+                            break; // Overlap found, try new position
+                        }
+                    }
+                }
+                attempts++;
+            }
+    
+            if (foundSafePosition)
+            {
+                coin.Position = spawnPosition;
+    
+                // Tilføj coin til scenen
+                AddChild(coin);
+    
+                coin.PickedUp += OnCoinPickedUp;
+            }
+            else
+            {
+                // If no safe position found after max attempts, free the coin instance
+                coin.QueueFree();
+            }
+        }
+    private void OnCoinPickedUp()
+    {
+        _coins++;
+        _hud.UpdateCoins(_coins);
     }
 }

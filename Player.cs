@@ -13,7 +13,7 @@ public partial class Player : Area2D
 
 	public override void _Ready() // Called when the node is added to the scene.
 	{
-		ScreenSize = GetViewportRect().Size; // Get the size of the game window
+		ScreenSize = GetViewport().GetVisibleRect().Size; // Get the size of the game window
 		Hide(); // Hide the player initially
 
 		BodyEntered += OnBodyEntered;
