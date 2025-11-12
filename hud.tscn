@@ -1,8 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://cvqvw7ypmtpn2"]
+[gd_scene load_steps=5 format=3 uid="uid://cvqvw7ypmtpn2"]
 
 [ext_resource type="FontFile" uid="uid://bgv586r20ps8e" path="res://fonts/Xolonium-Regular.ttf" id="1_37p78"]
 [ext_resource type="Script" uid="uid://c5q8n0mbytgnd" path="res://Hud.cs" id="1_64ctp"]
-[ext_resource type="Texture2D" uid="uid://r0yx4e8k6tg2" path="res://art/coin.png" id="2_abcde"]
 
 [sub_resource type="InputEventAction" id="InputEventAction_64ctp"]
 action = &"start_game"
@@ -17,15 +16,25 @@ script = ExtResource("1_64ctp")
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -22.5
-offset_right = 22.5
-offset_bottom = 78.0
+offset_left = -91.0
+offset_top = -8.0
+offset_right = -46.0
+offset_bottom = 70.0
 grow_horizontal = 2
 theme_override_fonts/font = ExtResource("1_37p78")
 theme_override_font_sizes/font_size = 64
 text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Label" type="Label" parent="ScoreLabel"]
+layout_mode = 0
+offset_left = -140.0
+offset_top = 4.0
+offset_right = -13.0
+offset_bottom = 71.0
+theme_override_font_sizes/font_size = 48
+text = "Time:"
 
 [node name="CoinsLabel" type="Label" parent="."]
 anchors_preset = 1
@@ -42,17 +51,14 @@ text = "0"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="CoinIcon" type="TextureRect" parent="CoinsLabel"]
-modulate = Color(1, 1, 1, 0.7882353)
-self_modulate = Color(0.7882353, 0.65882355, 0.25490198, 1)
+[node name="Label" type="Label" parent="CoinsLabel"]
 layout_mode = 0
-offset_left = 98.99999
-offset_top = 14.0
-offset_right = 599.0
-offset_bottom = 514.0
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("2_abcde")
-expand_mode = 1
+offset_left = 107.0
+offset_top = -8.0
+offset_right = 147.0
+offset_bottom = 80.0
+theme_override_font_sizes/font_size = 64
+text = "$"
 
 [node name="Message" type="Label" parent="."]
 anchors_preset = 8

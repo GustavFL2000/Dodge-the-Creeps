@@ -6,6 +6,7 @@ public partial class Hud : CanvasLayer
 	[Signal]
 	public delegate void StartGameEventHandler();
 
+
 	public override void _Ready()
 	{
 		// Forbind signaler i kode i stedet for editoren
