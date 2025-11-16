@@ -10,26 +10,43 @@ public partial class Player : Area2D
 	public int Speed { get; set; } = 400; // Speed of the player
 
 	public Vector2 ScreenSize; // Size of the game window
+	public bool HasShield { get; private set; } = false;
 
-	public override void _Ready() // Called when the node is added to the scene.
+	private AnimatedSprite2D _animatedSprite;
+
+	public override void _Ready()
 	{
-		ScreenSize = GetViewport().GetVisibleRect().Size; // Get the size of the game window
-		Hide(); // Hide the player initially
+		ScreenSize = GetViewport().GetVisibleRect().Size;
+		_animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+		Hide();
 
 		BodyEntered += OnBodyEntered;
 	}
 
-	public void Start(Vector2 position) // Method to start the player at a given position
+	public void ActivateShield()
+	{
+		HasShield = true;
+		_animatedSprite.Modulate = new Color(0.5f, 0.7f, 1f); // Light blue tint
+	}
+
+	private void DeactivateShield()
+	{
+		HasShield = false;
+		_animatedSprite.Modulate = new Color(1f, 1f, 1f); // Reset to normal color
+	}
+
+	public void Start(Vector2 position)
 	{
 		Position = position;
 		Show();
 		GetNode<CollisionShape2D>("CollisionShape2D").Disabled = false;
+		DeactivateShield(); // Ensure shield is off at the start of a game
 	}
+
 	public override void _Process(double delta)
 	{
-		Vector2 velocity = Vector2.Zero; // Initialize the velocity vector
+		Vector2 velocity = Vector2.Zero;
 
-		// Check for input and adjust velocity accordingly
 		if (Input.IsActionPressed("move_right"))
 		{
 			velocity.X += 1;
@@ -47,16 +64,14 @@ public partial class Player : Area2D
 			velocity.Y -= 1;
 		}
 
-		var animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-
 		if (velocity.Length() > 0)
 		{
 			velocity = velocity.Normalized() * Speed;
-			animatedSprite2D.Play();
+			_animatedSprite.Play();
 		}
 		else
 		{
-			animatedSprite2D.Stop();
+			_animatedSprite.Stop();
 		}
 
 		Position += velocity * (float)delta;
@@ -67,20 +82,30 @@ public partial class Player : Area2D
 
 		if (velocity.X != 0)
 		{
-			animatedSprite2D.Animation = "walk";
-			animatedSprite2D.FlipV = false;
-			// See the note below about the following boolean assignment.
-			animatedSprite2D.FlipH = velocity.X < 0;
+			_animatedSprite.Animation = "walk";
+			_animatedSprite.FlipV = false;
+			_animatedSprite.FlipH = velocity.X < 0;
 		}
 		else if (velocity.Y != 0)
 		{
-			animatedSprite2D.Animation = "up";
-			animatedSprite2D.FlipV = velocity.Y > 0;
+			_animatedSprite.Animation = "up";
+			_animatedSprite.FlipV = velocity.Y > 0;
 		}
 	}
 
 	private void OnBodyEntered(Node2D body)
 	{
+		if (HasShield)
+		{
+			DeactivateShield();
+			// We could also make the mob that hit the shield disappear
+			if (body.IsInGroup("mobs"))
+			{
+				body.QueueFree();
+			}
+			return; // Don't die
+		}
+
 		Hide();
 		EmitSignal(SignalName.Hit);
 		GetNode<CollisionShape2D>("CollisionShape2D")

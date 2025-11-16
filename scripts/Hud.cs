@@ -5,12 +5,15 @@ public partial class Hud : CanvasLayer
 {
 	[Signal]
 	public delegate void StartGameEventHandler();
+	[Signal]
+	public delegate void OpenShopEventHandler();
 
 
 	public override void _Ready()
 	{
 		// Forbind signaler i kode i stedet for editoren
-		GetNode<Button>("StartButton").Pressed += OnStartButtonPressed;
+		GetNode<Button>("MenuButtons/StartButton").Pressed += OnStartButtonPressed;
+		GetNode<Button>("MenuButtons/ShopButton").Pressed += OnShopButtonPressed;
 		GetNode<Timer>("MessageTimer").Timeout += OnMessageTimerTimeout;
 	}
 
@@ -37,7 +40,7 @@ public partial class Hud : CanvasLayer
 		// Brug SceneTree's CreateTimer i stedet for en separat Timer-node
 		await ToSignal(GetTree().CreateTimer(1.0), SceneTreeTimer.SignalName.Timeout);
 
-		GetNode<Button>("StartButton").Show();
+		GetNode<Control>("MenuButtons").Show();
 	}
 
 	    public void UpdateScore(int score)
@@ -49,10 +52,21 @@ public partial class Hud : CanvasLayer
 	    {
 	        GetNode<Label>("CoinsLabel").Text = coins.ToString();
 	    }
+
+	    public void UpdateLives(int lives)
+	    {
+	        GetNode<Label>("LivesLabel").Text = $"❤️ {lives}";
+	    }
 	
 	    private void OnStartButtonPressed()	{
-		GetNode<Button>("StartButton").Hide();
+		GetNode<Control>("MenuButtons").Hide();
 		EmitSignal(SignalName.StartGame);
+	}
+
+	private void OnShopButtonPressed()
+	{
+		GetNode<Control>("MenuButtons").Hide();
+		EmitSignal(SignalName.OpenShop);
 	}
 
 	private void OnMessageTimerTimeout()
