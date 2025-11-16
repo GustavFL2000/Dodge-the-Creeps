@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://bkxcbrpscacvk"]
+
+[ext_resource type="Script" uid="uid://cb20tjcv7q6ip" path="res://scripts/ShopMenu.cs" id="1_voj7l"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_voj7l")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ItemEntry" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ItemNavn" type="Label" parent="VBoxContainer/ItemEntry"]
+layout_mode = 2
+
+[node name="Pris" type="Label" parent="VBoxContainer/ItemEntry"]
+layout_mode = 2
+
+[node name="Køb" type="Button" parent="VBoxContainer/ItemEntry"]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0

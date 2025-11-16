@@ -39,7 +39,7 @@ public partial class Main : Node
     public void NewGame()
     {
         _score = 0;
-        _coins = 0;
+         // Behold coins mellem spil
 
         // Note that for calling Godot-provided methods with strings,
         // we have to use the original Godot snake_case name.
